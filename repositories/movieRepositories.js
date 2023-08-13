@@ -1,8 +1,8 @@
-const Movie = require("../models/movie");
+const { Movie } = require("../models");
 
 class MovieRepository {
-  static create = async (payload) => {
-    const movie = await Movie.create(payload);
+  static create = async (payload, fileImg) => {
+    const movie = await Movie.create(payload, fileImg);
     return movie;
   };
 
@@ -18,12 +18,13 @@ class MovieRepository {
 
   static update = async (id, payload) => {
     const movie = await MovieRepository.findOne(id);
+    if (!movie) throw { name: "ErrorNotFound" };
     return await movie.update(payload);
   };
 
   static delete = async (id) => {
     const movie = await MovieRepository.findOne(id);
-
+    if (!movie) throw { name: "ErrorNotFound" };
     return await movie.destroy();
   };
 }

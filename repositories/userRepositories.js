@@ -1,4 +1,4 @@
-const User = require("../models/user");
+const { User } = require("../models");
 
 class UserRepository {
   static create = async (payload) => {
@@ -12,20 +12,20 @@ class UserRepository {
   };
 
   static findOne = async (id) => {
-    const users = await User.findByPk(id);
-    return users;
+    const user = await User.findByPk(id);
+    return user;
   };
 
   static update = async (id, payload) => {
     const user = await UserRepository.findOne(id);
-
+    if (!user) throw { name: "ErrorNotFound" };
     return await user.update(payload);
   };
 
   static delete = async (id) => {
     const user = await UserRepository.findOne(id);
-
-    return user.destroy();
+    if (!user) throw { name: "ErrorNotFound" };
+    return await user.destroy();
   };
 }
 

@@ -11,8 +11,8 @@ class MovieService {
     return movie;
   };
 
-  static create = async (payload) => {
-    const movie = await MovieRepository.create(payload);
+  static create = async (payload, fileImg) => {
+    const movie = await MovieRepository.create(payload, fileImg);
     return movie;
   };
 
@@ -23,6 +23,7 @@ class MovieService {
 
   static delete = async (id) => {
     const movie = await MovieRepository.delete(id);
+    return movie;
   };
 }
 

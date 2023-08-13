@@ -12,7 +12,8 @@ class MovieController {
 
   static findOne = async (req, res, next) => {
     try {
-      const movie = await MovieService.findOne(req.params);
+      const movie = await MovieService.findOne(req.params.id);
+
       if (!movie) {
         throw { name: "ErrorNotFound" };
       }
@@ -21,14 +22,21 @@ class MovieController {
       next(error);
     }
   };
+
   static create = async (req, res, next) => {
     try {
-      if (!photo) {
-        throw Error;
-      }
+      const { title, genres, year } = req.body;
+      let linkImg = `http://localhost:3000/uploads/${req.file.filename}`;
+      const data = {
+        title,
+        genres,
+        year,
+        photo: linkImg,
+      };
 
-      await MovieService.create(req.body, req.file);
+      if (!req.file) throw new Error();
 
+      await MovieService.create(data);
       res.status(201).json({ message: "movie created successfully" });
     } catch (error) {
       next(error);
@@ -36,7 +44,7 @@ class MovieController {
   };
   static update = async (req, res, next) => {
     try {
-      await MovieService.update(req.params, req.body);
+      await MovieService.update(req.params.id, req.body);
       res.status(200).json({
         message: "movie update successfully",
       });
@@ -46,10 +54,7 @@ class MovieController {
   };
   static delete = async (req, res, next) => {
     try {
-      const movie = await MovieService.delete(req.params);
-
-      if (!movie) throw { name: "ErrorNotFound" };
-
+      await MovieService.delete(req.params.id);
       res.status(200).json({ message: "movie delete successfully" });
     } catch (error) {
       next(error);

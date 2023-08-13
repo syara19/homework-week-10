@@ -12,7 +12,7 @@ class UserController {
 
   static findOne = async (req, res, next) => {
     try {
-      const user = await UserService.findOne(req.params);
+      const user = await UserService.findOne(req.params.id);
       if (!user) {
         throw { name: "ErrorNotFound" };
       }
@@ -21,6 +21,7 @@ class UserController {
       next(error);
     }
   };
+
   static create = async (req, res, next) => {
     try {
       await UserService.create(req.body);
@@ -30,10 +31,10 @@ class UserController {
       next(error);
     }
   };
+
   static update = async (req, res, next) => {
     try {
-      const user = await UserService.update(req.params, req.body);
-      if (user) throw { name: "ErorNotFound" };
+      await UserService.update(req.params.id, req.body);
       res.status(200).json({
         message: "user update successfully",
       });
@@ -41,14 +42,15 @@ class UserController {
       next(error);
     }
   };
+
   static delete = async (req, res, next) => {
     try {
-      const user = await UserService.delete(req.params);
-
-      if (!user) throw { name: "ErrorNotFound" };
+      await UserService.delete(req.params.id);
 
       res.status(200).json({ message: "user delete successfully" });
-    } catch (error) {}
+    } catch (error) {
+      next(error);
+    }
   };
 }
 
